@@ -1,0 +1,140 @@
+' Bertrand Blanc
+
+@startuml
+
+class Palindrome {
+    - list_
+    - dict_
+    - vocabulary
+
+    + __len__()
+    + __iter__()
+    + __str__()
+    + __getitem__(idx)
+
+    + shuffle()
+    + is_true()
+    + is_false()
+    + is_palindrome()
+    + append()
+    + generate_set()
+    + get_any()
+    + get_range(bound)
+    + dump()
+
+    - _add_candidate()
+    - _generate()
+}
+note top
+|=Set	|=Length	|=Total samples	|=palindrome	|=not palindrome |
+|10_20000_words	|0-18	|181_095	|140_327	|40_768|
+|10_50000_words	|0-18	|416_545	|322_986	|93_559|
+|10_100000_words	|0-18	|800_710	|627_090	|173_620|
+|10_500000_words	|0-18	|3_723_744	|2_997_888	|725_856|
+|25_20000_words	|0-48	|707_026	|445_544	|261_282|
+|50_5000_words	|0-98	|519_515	|240_466	|279_049|
+|50_20000_words	|0-98	|2_037_130	|954_366	|1_082_764|
+|100_100_all	|0-198	|131_256	|39_946	|91_310|
+|100_200_all	|0-198	|259_858	|79_362	|180_496|
+|100_200_words	|0-198	|67_981	|20_120	|47_861|
+|100_1000_all	|0-198	|1_270_396	|392_138	|878_258|
+|100_1000_words	|1-198	|335_297	|99_785	|235_512|
+end note
+
+class Sampling{
+    - _source
+    - _dict
+    - _data_length
+    - _padding
+    - _vocabulary
+
+    + train()
+    + test()
+    + validate()
+    + data_length()
+    + vocabulary()
+
+    - _pad()
+}
+
+package JSON <<database>>{
+}
+
+Palindrome --> JSON
+JSON --> Sampling
+
+class Model{
+    - TRAINING
+    - EPOCHS
+    - DROPOUT
+    - LEARNING_RATE
+    - ADAM
+    - LR_DECAY
+    - REGULIRIZER
+    - NEURONS
+
+    - MODEL_FILENAME
+    - TRAIN_PERCENTAGE
+    - YHAT_THRESHOLD
+    - VALIDATE_SET
+
+    # create()
+    # train()
+    # input_check()
+    + evaluate()
+    # is_palindrome()
+    + validate()
+}
+note bottom
+|=Network |= Vocabulary   |=sample length |= sample size |= LR	|=epoch	|=Hidden Layers	|=Training Accuracy	|=Test Accuracy	|=Validation |
+|1 | [a-z0-9ATCGU]	|0-198	|131_256	|0.001	|10	    |50/20	|89.75%	|Bias	|Bias|
+|2 | [a-z0-9ATCGU]  |0-198	|131_256	|0.001	|50	    |50/20	|94.24%	|94.76%	|Bias|
+|3 | [a-z0-9ATCGU]	|0-198	|131_256	|0.001	|10	    |500/200/30/10	|89.29%	|88.05%	|Bias|
+|4 | [a-z0-9ATCGU]  |0-198	|1_270_396	|Decay	|1.5	|500/200/20	|91.74%	|overtime	|N/A|
+|5 | [a-z0-9ATCGU]  |0-198	|259_858	|Decay	|15	    |50/50	|93.84%	|94.05%	|Bias|
+|6 | [a-z]	        |0-198	|67_981	    |Decay	|17	    |50/50	|92.38%	|92.12%	|Bias|
+|7 | [a-z]	        |1-198	|335_297	|Decay	|6	    |50/40	|94.97%	|93.63%	|Bias|
+|8 | [a-z]	        |0-98	|519_515	|Decay	|7	    |50/40	|98.05%	|97.89%	|N/A|
+|9 | [a-z]	        |0-48	|707_026	|Decay	|10	    |50/40	|99.53%	|99.52%	|N/A|
+|10 | [a-z]	        |0-18	|416_545	|Decay	|16	    |50/40	|99.85%	|99.80%	|79%|
+|11 | [a-z]	        |0-18	|800_710	|Decay	|13	    |50/40	|99.97%	|99.96%	|79%|
+|12 | [a-z]	        |0-18	|800_710	|Decay	|40	    |50/80/30, l1=l2=0.01	|92.10%	|92.15%	|Bias|
+|13 | [a-z]	        |0-18	|800_710	|Decay	|8	    |50/80/30, l1=l2=0.001	|99.02%	|98.61%	|64%|
+|14 | [a-z]	        |0-18	|3_723_744	|Decay	|4	    |50/40	|99.99%	|99.99%	|64%|
+
+end note
+
+Model *-- Sampling
+
+class Main{
+    - parser
+    - args
+
+    - _parser()
+    - _dispatch()
+    - _terminate()
+    - _create_model()
+    - _load_model()
+    - _user_inputs(model)
+    - _author()
+}
+note right
+usage: main.py [-h] [- -author] [- -model MODEL] [- -data-length DATA_LENGTH] [--create]
+
+predict whether a word is a palindrome or not, basd on a NN algorithm
+
+options:
+  -h, --help            show this help message and exit
+  --author              author of the program
+  --model MODEL, -m MODEL
+                        file name for a keras existing model
+  --data-length DATA_LENGTH, -dl DATA_LENGTH
+                        length of the data processed by the keras model
+  --create              creates a keras NN, train it and store it into a keras file
+
+thank you for using this program
+end note
+
+Main *-- Model
+
+@enduml

@@ -1,0 +1,7 @@
+__pycache__/*
+out/*
+tmp/*
+results.txt
+*.json.txt
+*.keras
+Palindrome.code-workspace
