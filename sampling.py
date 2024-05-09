@@ -1,4 +1,6 @@
 
+__author__ = "Bertrand Blanc"
+
 from palindrome import Palindromes
 import json
 import numpy as np

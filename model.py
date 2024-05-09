@@ -1,4 +1,7 @@
 
+
+__author__ = "Bertrand Blanc"
+
 from sampling import Sampling
 import tensorflow as tf
 from tensorflow import keras

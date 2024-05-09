@@ -1,9 +1,10 @@
+
+__author__ = "Bertrand Blanc"
+
 import argparse
 import sys
 
 from model import Model
-
-
 
 class Main():
     def __init__(self, *args, **kargs):

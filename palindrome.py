@@ -1,5 +1,7 @@
 
 
+__author__ = "Bertrand Blanc"
+
 from random import randint,choice,shuffle
 import json
 
